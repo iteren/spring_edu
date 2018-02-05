@@ -6,8 +6,13 @@ import com.iteren.spring_training.model.Task;
 
 public interface TaskDao {
 
+	List<Task> list();
+	
+	Task get(Long id);
+
 	void save(Task task);
 
-	List<Task> list();
+	void update(Task task);
 
+	void delete(Task task);
 }

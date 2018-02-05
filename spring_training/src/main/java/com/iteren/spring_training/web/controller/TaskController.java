@@ -3,6 +3,7 @@ package com.iteren.spring_training.web.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,8 +23,23 @@ public class TaskController {
 		return taskService.getTasks();
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, path="/tasks/add", consumes={"application/json","application/xml"})
+	@RequestMapping(method=RequestMethod.GET, path="/task/{id}", produces={"application/json","application/xml"})
+	public Task get(@PathVariable("id") Long id) {
+		return taskService.get(id);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, path="/task", consumes={"application/json","application/xml"})
 	public void add(@RequestBody Task task) {
 		taskService.addTask(task);
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, path="/task/{id}", consumes={"application/json","application/xml"})
+	public void delete(@PathVariable("id") Long id) {
+		taskService.deleteTask(id);
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT, path="/task", consumes={"application/json","application/xml"})
+	public void update(@RequestBody Task task) {
+		taskService.updateTask(task);
 	}
 }

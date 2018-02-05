@@ -28,14 +28,6 @@ public class TaskService {
 	public TaskService() {
 		log.info("TaskService.initialized!");
 	}
-
-	public List<Task> getTasks() {
-		return taskDao.list();
-	}
-	
-	public void addTask(Task task) {
-		taskDao.save(task);
-	}
 	
 	@PostConstruct
 	public void postC() {
@@ -44,6 +36,34 @@ public class TaskService {
 
 	@PreDestroy
 	public void preD() {
-		System.out.println("TaskService.toBeDeleted!");
+		log.info("TaskService.toBeDeleted!");
+	}
+
+	public List<Task> getTasks() {
+		return taskDao.list();
+	}
+	
+	public Task get(Long id) {
+		return taskDao.get(id);
+	}
+	
+	public void addTask(Task task) {
+		updateTask(task);
+	}
+	
+	public void deleteTask(Long id) {
+		Task existing = taskDao.get(id);
+		if (existing != null) {
+			taskDao.delete(existing);
+		}
+	}
+	
+	public void updateTask(Task task) {
+		Task existing = taskDao.get(task.getId());
+		if (existing != null) {
+			taskDao.update(task);
+		} else {
+			taskDao.save(task);
+		}
 	}
 }

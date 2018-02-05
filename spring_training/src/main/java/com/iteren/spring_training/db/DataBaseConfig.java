@@ -38,7 +38,7 @@ public class DataBaseConfig {
 			private static final long serialVersionUID = 1L;
 
 			{
-				setProperty("hibernate.hbm2ddl.auto", "validate");
+				setProperty("hibernate.hbm2ddl.auto", "update");
 				setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 				setProperty("hibernate.globally_quoted_identifiers", "true");
 			}
