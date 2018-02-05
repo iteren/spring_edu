@@ -14,16 +14,19 @@ import org.springframework.stereotype.Service;
 import com.iteren.spring_training.db.dao.TaskDao;
 import com.iteren.spring_training.model.Task;
 
+import lombok.extern.log4j.Log4j;
+
 @Service("service")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Lazy
+@Log4j
 public class TaskService {
 
 	@Autowired
 	private TaskDao taskDao;
 	
 	public TaskService() {
-		System.out.println("TaskService.initialized!");
+		log.info("TaskService.initialized!");
 	}
 
 	public List<Task> getTasks() {
@@ -36,7 +39,7 @@ public class TaskService {
 	
 	@PostConstruct
 	public void postC() {
-		System.out.println("TaskService.created!");
+		log.info("TaskService.created!");
 	}
 
 	@PreDestroy

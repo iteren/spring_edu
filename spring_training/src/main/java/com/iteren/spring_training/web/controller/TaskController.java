@@ -1,4 +1,4 @@
-package com.iteren.spring_training.controller;
+package com.iteren.spring_training.web.controller;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public class TaskController {
 	@Autowired
 	private TaskService taskService;
 
-	@RequestMapping(method=RequestMethod.GET, path="/tasks")
+	@RequestMapping(method=RequestMethod.GET, path="/tasks", produces={"application/json","application/xml"})
 	public List<Task> tasks() {
 		return taskService.getTasks();
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, path="/tasks/add", consumes="application/json")
+	@RequestMapping(method=RequestMethod.POST, path="/tasks/add", consumes={"application/json","application/xml"})
 	public void add(@RequestBody Task task) {
 		taskService.addTask(task);
 	}
