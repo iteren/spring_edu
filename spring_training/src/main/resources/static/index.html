@@ -7,22 +7,179 @@
 </head>
 <body>
 
-	<h2>Task</h2>
-	<div>
-		<form>
-			<input type="text"> <input type="submit" value="Get Task" id="submit">
-		</form>
+
+
+	<h2>List Ids</h2>
+	<input type="button" value="List ids" id="list">
+	<h2>Get Task</h2>
+	<input type="text" id="inid">
+	<input type="button" value="Get Task" id="search">
+	<br>
+	<br>
+
+	<div id="updateTasks"></div>
+	<input type="button" value="Save" id="update" hidden="true">
+	<input type="button" value="Delete" id="delete" hidden="true">
+
+	<div id="addTasks">
+		<h2>Or Add Task</h2>
+		<table>
+			<tr>
+				<th>Column</th>
+				<th>Value</th>
+			</tr>
+			<tr>
+				<td>name</td>
+				<td><input type="text" id="addname"></td>
+			</tr>
+			<tr>
+				<td>description</td>
+				<td><input type="text" id="adddescription"></td>
+			</tr>
+			<tr>
+				<td>dueDate</td>
+				<td><input type="text" id="adddueDate"></td>
+			</tr>
+			<tr>
+				<td>compleated</td>
+				<td><input type="text" id="addcompleated"></td>
+			</tr>
+		</table>
+		<input type="button" value="Add Task" id="add">
 	</div>
 
+	<div id="errors"></div>
+
 	<script>
-		$("form").submit(function( event ) {
-			alert("Test");
+		$("#search")
+				.click(
+						function(event) {
+							$
+									.ajax({
+										url : '/task/' + $('#inid').val(),
+										type : 'get',
+										dataType : 'json',
+										success : function(data) {
+											var html = '<table><th>Column</th><th>Value</th>';
+											for ( var key in data) {
+												if (data.hasOwnProperty(key)) {
+													var val = data[key];
+													console.log(val);
+													html += '<tr><td>' + key
+															+ '</td>';
+													html += '<td><input type="text" value="' + val + '" id="' + key + '"></td></tr>';
+												}
+											}
+											$("#updateTasks").html(html);
+											$("#errors").html('');
+											$("#update").show();
+											$("#delete").show();
+											$("#addTasks").hide();
+										}
+									});
+						});
+
+		$("#update").click(
+				function(event) {
+					$.ajax({
+						url : '/task',
+						type : 'PUT',
+						contentType : 'application/json',
+						data : '{"id":"' + $('#id').val() + '", "name":"'
+								+ $('#name').val() + '", "description":"'
+								+ $('#description').val() + '", "dueDate":"'
+								+ $('#dueDate').val() + '","compleated":"'
+								+ $('#compleated').val() + '"}',
+						success : function(data) {
+							if (data != '') {
+								$("#errors").html(data);
+							} else {
+								$("#updateTasks").html('<b>SUCCESS!</b>');
+								$("#update").hide();
+								$("#delete").hide();
+								$('#inid').val('');
+								$("#errors").html('');
+								$("#addTasks").show();
+							}
+						}
+					});
+				});
+
+		$("#delete").click(function(event) {
 			$.ajax({
-				url : '/tasks,
-				type : 'get',
-				dataType : 'json',
+				url : '/task/' + $('#id').val(),
+				type : 'DELETE',
+				contentType : 'application/json',
 				success : function(data) {
-					alert('No!');
+					if (data != '') {
+						$("#errors").html(data);
+					} else {
+						$("#updateTasks").html('<b>SUCCESS!</b>');
+						$("#update").hide();
+						$("#delete").hide();
+						$('#inid').val('');
+						$("#errors").html('');
+						$("#addTasks").show();
+					}
+				}
+			});
+		});
+
+		$("#add").click(
+				function(event) {
+					$.ajax({
+						url : '/task',
+						type : 'POST',
+						contentType : 'application/json',
+						data : '{"name":"' + $('#addname').val()
+								+ '", "description":"'
+								+ $('#adddescription').val() + '", "dueDate":"'
+								+ $('#adddueDate').val() + '","compleated":"'
+								+ $('#addcompleated').val() + '"}',
+						success : function(data) {
+							if (data != '') {
+								$("#errors").html(data);
+							} else {
+								$("#updateTasks").html('<b>SUCCESS!</b>');
+								$("#update").hide();
+								$("#delete").hide();
+								$('#inid').val('');
+								$("#errors").html('');
+								$("#addTasks").show();
+								$('#addname').val('');
+								$('#adddescription').val('');
+								$('#adddueDate').val('');
+								$('#addcompleated').val('');
+							}
+						}
+					});
+				});
+		$("#list").click(function(event) {
+			$.ajax({
+				url : '/tasks',
+				type : 'GET',
+				contentType : 'application/json',
+				success : function(data) {
+					var ids = '<select id="inid">';
+					for ( var task in data) {
+						for ( var key in data[task]) {
+							if (data[task].hasOwnProperty(key) && key == "id") {
+								var val = data[task][key];
+								ids += '<option value="'+val+'">'+val+'</option>';
+							}
+						}
+					}
+					ids += '</select>';
+					var attrs = { };
+					$.each($("#inid")[0].attributes, function(idx, attr) {
+					    attrs[attr.nodeName] = attr.nodeValue;
+					});
+
+
+					$("#inid").replaceWith(function () {
+					    attrs.text = $(this).text();
+					    return $(ids, attrs);
+					});
 				}
 			});
 		});

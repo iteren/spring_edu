@@ -33,7 +33,7 @@ public class TaskController {
 		return taskService.get(id);
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT, path="/task", consumes={"application/json","application/xml"})
+	@RequestMapping(method=RequestMethod.POST, path="/task", consumes={"application/json","application/xml"})
 	public void add(@RequestBody Task task) {
 		taskService.addTask(task);
 	}
@@ -43,7 +43,7 @@ public class TaskController {
 		taskService.deleteTask(id);
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, path="/task", consumes={"application/json","application/xml"})
+	@RequestMapping(method=RequestMethod.PUT, path="/task", consumes={"application/json","application/xml"})
 	public void update(@RequestBody Task task) {
 		taskService.updateTask(task);
 	}

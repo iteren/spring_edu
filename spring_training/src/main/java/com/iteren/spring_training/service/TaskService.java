@@ -48,7 +48,7 @@ public class TaskService {
 	}
 
 	public void addTask(Task task) {
-		updateTask(task);
+		taskDao.save(task);
 	}
 
 	public Task deleteTask(Long id) {

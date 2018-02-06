@@ -22,7 +22,7 @@ public class HistoryService {
 	@Autowired
 	private HistoryDao historyDao;
 	
-	@After("execution(* com.iteren.spring_training.service.TaskService.addTask(..)) && args(task)")
+	@AfterReturning(pointcut = "execution(* com.iteren.spring_training.service.TaskService.addTask(..)) && args(task)")
 	public void afterAddTask(JoinPoint joinPoint, Task task) {
 		createHistoryEvent(task.getId(), "task added", "Task name: " + task.getName(), null);
 	}
@@ -61,8 +61,8 @@ public class HistoryService {
 		HistoryEvent event = new HistoryEvent();
 		event.setTaskId(id);
 		event.setChangedField(changedField);
-		event.setNewValue(newValue.toString());
-		event.setOldValue(oldValue.toString());
+		event.setNewValue(newValue == null ? null : newValue.toString());
+		event.setOldValue(oldValue == null ? null : oldValue.toString());
 		historyDao.save(event );
 	}
 }
