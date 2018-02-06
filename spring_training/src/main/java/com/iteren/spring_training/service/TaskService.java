@@ -16,7 +16,7 @@ import com.iteren.spring_training.model.Task;
 
 import lombok.extern.log4j.Log4j;
 
-@Service("service")
+@Service("taskService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 @Lazy
 @Log4j
@@ -24,11 +24,11 @@ public class TaskService {
 
 	@Autowired
 	private TaskDao taskDao;
-	
+
 	public TaskService() {
 		log.info("TaskService.initialized!");
 	}
-	
+
 	@PostConstruct
 	public void postC() {
 		log.info("TaskService.created!");
@@ -42,28 +42,27 @@ public class TaskService {
 	public List<Task> getTasks() {
 		return taskDao.list();
 	}
-	
+
 	public Task get(Long id) {
 		return taskDao.get(id);
 	}
-	
+
 	public void addTask(Task task) {
 		updateTask(task);
 	}
-	
-	public void deleteTask(Long id) {
+
+	public Task deleteTask(Long id) {
 		Task existing = taskDao.get(id);
 		if (existing != null) {
 			taskDao.delete(existing);
 		}
+
+		return existing;
 	}
-	
-	public void updateTask(Task task) {
+
+	public Task updateTask(Task task) {
 		Task existing = taskDao.get(task.getId());
-		if (existing != null) {
-			taskDao.update(task);
-		} else {
-			taskDao.save(task);
-		}
+		taskDao.update(task);
+		return existing;
 	}
 }

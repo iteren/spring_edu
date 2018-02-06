@@ -26,9 +26,7 @@ public class HistoryEvent {
 	@NotNull
 	private String changedField;
 	
-	@NotNull
 	private String oldValue;
 	
-	@NotNull
 	private String newValue;
 }

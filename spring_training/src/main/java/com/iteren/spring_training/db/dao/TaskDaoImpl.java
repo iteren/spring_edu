@@ -1,15 +1,12 @@
 package com.iteren.spring_training.db.dao;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import com.iteren.spring_training.model.Task;
 
@@ -55,15 +52,11 @@ public class TaskDaoImpl implements TaskDao {
 		session.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Task get(Long id) {
 		Session session = this.sessionFactory.openSession();
-		List<Task> tasks = session.createQuery("from Task where id = " + id).list();
+		Task task = session.get(Task.class, id);
 		session.close();
-		if (CollectionUtils.isEmpty(tasks)) {
-			throw new IllegalArgumentException("There is no Task with id " + id);
-		}
-		return tasks.get(0);
+		return task;
 	}
 }

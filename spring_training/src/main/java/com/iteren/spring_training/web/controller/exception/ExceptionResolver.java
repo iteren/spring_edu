@@ -23,6 +23,7 @@ public class ExceptionResolver extends AbstractHandlerExceptionResolver {
 		modelAndView.addObject("url", request.getRequestURL());
 
 		modelAndView.setViewName("exception");
+		ex.printStackTrace();
 		return modelAndView;
 	}
 

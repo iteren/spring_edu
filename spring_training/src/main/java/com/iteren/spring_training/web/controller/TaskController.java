@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iteren.spring_training.model.HistoryEvent;
 import com.iteren.spring_training.model.Task;
+import com.iteren.spring_training.service.HistoryService;
 import com.iteren.spring_training.service.TaskService;
 
 @RestController
@@ -17,6 +19,9 @@ public class TaskController {
 
 	@Autowired
 	private TaskService taskService;
+	
+	@Autowired
+	private HistoryService historyService;
 
 	@RequestMapping(method=RequestMethod.GET, path="/tasks", produces={"application/json","application/xml"})
 	public List<Task> tasks() {
@@ -28,7 +33,7 @@ public class TaskController {
 		return taskService.get(id);
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, path="/task", consumes={"application/json","application/xml"})
+	@RequestMapping(method=RequestMethod.PUT, path="/task", consumes={"application/json","application/xml"})
 	public void add(@RequestBody Task task) {
 		taskService.addTask(task);
 	}
@@ -38,8 +43,13 @@ public class TaskController {
 		taskService.deleteTask(id);
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT, path="/task", consumes={"application/json","application/xml"})
+	@RequestMapping(method=RequestMethod.POST, path="/task", consumes={"application/json","application/xml"})
 	public void update(@RequestBody Task task) {
 		taskService.updateTask(task);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, path="/task/{id}/history", produces={"application/json","application/xml"})
+	public List<HistoryEvent> getHistory(@PathVariable("id") Long id) {
+		return historyService.getHistoryForTaskId(id);
 	}
 }
