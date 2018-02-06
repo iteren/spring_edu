@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Task demo</title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+
+	<h2>Task</h2>
+	<div>
+		<form>
+			<input type="text"> <input type="submit" value="Get Task" id="submit">
+		</form>
+	</div>
+
+	<script>
+		$("form").submit(function( event ) {
+			alert("Test");
+			$.ajax({
+				url : '/tasks,
+				type : 'get',
+				dataType : 'json',
+				success : function(data) {
+					alert('No!');
+				}
+			});
+		});
+	</script>
+</body>
+</html>
