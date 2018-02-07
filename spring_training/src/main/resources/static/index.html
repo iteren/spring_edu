@@ -8,21 +8,20 @@
 <body>
 
 
+	<div style="width: 50%; float:left">
+		<h2>List Ids</h2>
+		<input type="button" value="List ids" id="list">
+		<h2>Get Task</h2>
+		<input type="text" id="inid"> <input type="button" value="Get Task and History" id="search"> <br>
+		<br>
 
-	<h2>List Ids</h2>
-	<input type="button" value="List ids" id="list">
-	<h2>Get Task</h2>
-	<input type="text" id="inid">
-	<input type="button" value="Get Task" id="search">
-	<br>
-	<br>
-
-	<div id="updateTasks"></div>
-	<input type="button" value="Save" id="update" hidden="true">
-	<input type="button" value="Delete" id="delete" hidden="true">
-
-	<div id="addTasks">
-		<h2>Or Add Task</h2>
+		<div id="updateTasks"></div>
+		<input type="button" value="Save" id="update" hidden="true"> <input type="button" value="Delete" id="delete"
+			hidden="true">
+		<div id="history"></div>
+	</div>
+	<div id="addTasks" style="width: 50%; float:left">
+		<h2>Add Task</h2>
 		<table>
 			<tr>
 				<th>Column</th>
@@ -60,21 +59,40 @@
 										type : 'get',
 										dataType : 'json',
 										success : function(data) {
-											var html = '<table><th>Column</th><th>Value</th>';
+											var html = '<h3>Task Details</h3><table border=1><tr><th>Column</th><th>Value</th></tr>';
 											for ( var key in data) {
 												if (data.hasOwnProperty(key)) {
 													var val = data[key];
 													console.log(val);
-													html += '<tr><td>' + key
-															+ '</td>';
+													html += '<tr><td>' + key + '</td>';
 													html += '<td><input type="text" value="' + val + '" id="' + key + '"></td></tr>';
 												}
 											}
+											html += '</table>'
 											$("#updateTasks").html(html);
 											$("#errors").html('');
 											$("#update").show();
 											$("#delete").show();
-											$("#addTasks").hide();
+										}
+									});
+
+							$
+									.ajax({
+										url : '/task/' + $('#inid').val() + '/history',
+										type : 'get',
+										dataType : 'json',
+										success : function(data) {
+											var html = '<h3>History</h3><table border=1><tr><th>Changed Field</th><th>Old Value</th><th>New Value</th></tr>';
+											for ( var task in data) {
+												html += '<tr>';
+												html += '<td>' + data[task]['changedField'] + '</td>';
+												html += '<td>' + data[task]['oldValue'] + '</td>';
+												html += '<td>' + data[task]['newValue'] + '</td>';
+												html += '</tr>';
+											}
+											html += '</table>'
+											$("#history").html(html);
+											$("#errors").html('');
 										}
 									});
 						});
@@ -85,10 +103,8 @@
 						url : '/task',
 						type : 'PUT',
 						contentType : 'application/json',
-						data : '{"id":"' + $('#id').val() + '", "name":"'
-								+ $('#name').val() + '", "description":"'
-								+ $('#description').val() + '", "dueDate":"'
-								+ $('#dueDate').val() + '","compleated":"'
+						data : '{"id":"' + $('#id').val() + '", "name":"' + $('#name').val() + '", "description":"'
+								+ $('#description').val() + '", "dueDate":"' + $('#dueDate').val() + '","compleated":"'
 								+ $('#compleated').val() + '"}',
 						success : function(data) {
 							if (data != '') {
@@ -99,7 +115,6 @@
 								$("#delete").hide();
 								$('#inid').val('');
 								$("#errors").html('');
-								$("#addTasks").show();
 							}
 						}
 					});
@@ -119,7 +134,6 @@
 						$("#delete").hide();
 						$('#inid').val('');
 						$("#errors").html('');
-						$("#addTasks").show();
 					}
 				}
 			});
@@ -131,10 +145,8 @@
 						url : '/task',
 						type : 'POST',
 						contentType : 'application/json',
-						data : '{"name":"' + $('#addname').val()
-								+ '", "description":"'
-								+ $('#adddescription').val() + '", "dueDate":"'
-								+ $('#adddueDate').val() + '","compleated":"'
+						data : '{"name":"' + $('#addname').val() + '", "description":"' + $('#adddescription').val()
+								+ '", "dueDate":"' + $('#adddueDate').val() + '","compleated":"'
 								+ $('#addcompleated').val() + '"}',
 						success : function(data) {
 							if (data != '') {
@@ -145,7 +157,6 @@
 								$("#delete").hide();
 								$('#inid').val('');
 								$("#errors").html('');
-								$("#addTasks").show();
 								$('#addname').val('');
 								$('#adddescription').val('');
 								$('#adddueDate').val('');
@@ -165,23 +176,23 @@
 						for ( var key in data[task]) {
 							if (data[task].hasOwnProperty(key) && key == "id") {
 								var val = data[task][key];
-								ids += '<option value="'+val+'">'+val+'</option>';
+								ids += '<option value="'+val+'">' + val + '</option>';
 							}
 						}
 					}
 					ids += '</select>';
-					var attrs = { };
+					var attrs = {};
 					$.each($("#inid")[0].attributes, function(idx, attr) {
-					    attrs[attr.nodeName] = attr.nodeValue;
+						attrs[attr.nodeName] = attr.nodeValue;
 					});
 
-
-					$("#inid").replaceWith(function () {
-					    attrs.text = $(this).text();
-					    return $(ids, attrs);
+					$("#inid").replaceWith(function() {
+						attrs.text = $(this).text();
+						return $(ids, attrs);
 					});
 				}
 			});
+
 		});
 	</script>
 </body>
