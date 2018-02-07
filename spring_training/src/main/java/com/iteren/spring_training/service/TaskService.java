@@ -17,14 +17,14 @@ import com.iteren.spring_training.model.Task;
 import lombok.extern.log4j.Log4j;
 
 @Service("taskService")
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "singleton")
 @Lazy
 @Log4j
 public class TaskService {
 
 	@Autowired
 	private TaskDao taskDao;
-
+	
 	public TaskService() {
 		log.info("TaskService.initialized!");
 	}
